@@ -1,35 +1,137 @@
-@import './base.css';
+/* =========================================
+   1. Variables Globales (Theming)
+   ========================================= */
+:root {
+  /* Paleta de Colores Nexus */
+  --color-primary: #6f42c1;       /* Púrpura principal */
+  --color-primary-dark: #553098;  /* Púrpura oscuro (hover) */
+  --color-secondary: #28a745;     /* Verde (éxito/detalles) */
+  --color-accent: #a4febd;        /* Verde claro (acentos) */
+  
+  /* Textos y Fondos */
+  --color-text-main: #333333;
+  --color-text-light: #666666;
+  --color-bg-body: #fdfdfd;
+  --color-bg-light: #f4f4f4;
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+  /* Espaciado y Layout */
+  --container-width: 1200px;      /* Requisito estricto de la actividad */
+  --border-radius: 8px;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+/* =========================================
+   2. Reset y Base
+   ========================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* Manejo geométrico de cajas */
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  background-color: var(--color-bg-body);
+  color: var(--color-text-main);
+  line-height: 1.6; /* Mejora la legibilidad de los párrafos */
+  -webkit-font-smoothing: antialiased;
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+img {
+  max-width: 100%;
+  display: block;
+  height: auto;
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+/* =========================================
+   3. Sistema de Layout (Requisito 1200px)
+   ========================================= */
+/* Clase de utilidad para centrar contenido */
+.container, .page-container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto; /* Centrado horizontal */
+  padding: 0 20px; /* Margen interno para móviles */
+}
+
+/* Filas y Columnas genéricas (Flexbox básico) */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.col {
+  flex: 1;
+}
+
+/* =========================================
+   4. Tipografía Global
+   ========================================= */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  color: var(--color-primary);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 0.8rem;
+  border-bottom: 2px solid var(--color-accent);
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+p {
+  margin-bottom: 1rem;
+  color: var(--color-text-light);
+}
+
+/* =========================================
+   5. Elementos de Formulario (Inputs)
+   ========================================= */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+select {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+}
+
+/* =========================================
+   6. Botones Globales
+   ========================================= */
+button, 
+.btn {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: background-color 0.3s, transform 0.1s;
+}
+
+button:active {
+  transform: scale(0.98);
 }
