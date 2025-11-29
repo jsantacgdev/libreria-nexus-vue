@@ -11,7 +11,7 @@
       <ul class="nav-links">
         <li><router-link to="/">Inicio</router-link></li>
         <li><router-link to="/espacios">Espacios</router-link></li>
-        <li><router-link to="/checkout">Reservar</router-link></li>
+        <!-- <li><router-link to="/checkout">Reservar</router-link></li>   -->
       </ul>
     </div>
   </nav>

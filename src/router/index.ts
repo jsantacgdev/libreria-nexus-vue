@@ -22,6 +22,7 @@ const router = createRouter({
       component: CheckoutView,
     },
   ],
+  // Ajuste en el scroll para que al cambiar de página vuelva al inicio
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition;
