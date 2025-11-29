@@ -4,40 +4,62 @@
 
     <div class="checkout-layout">
       <div class="form-column">
-        <h2>Tus Datos</h2>
-        <form @submit.prevent="confirmarReserva">
-          <div class="form-group">
-            <label>Nombre Completo</label>
-            <input type="text" v-model="reserva.nombre" required />
+        <div v-if="!confirmacionVisible">
+          <h2>Tus Datos</h2>
+          <form @submit.prevent="confirmarReserva">
+            <div class="form-group">
+              <label>Nombre Completo</label>
+              <input type="text" v-model="reserva.nombre" required />
+            </div>
+
+            <div class="form-group">
+              <label>Email Universitario</label>
+              <input
+                type="email"
+                v-model="reserva.email"
+                placeholder="@universidad.edu"
+                required
+              />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Fecha</label>
+                <input type="date" v-model="reserva.fecha" required />
+              </div>
+              <div class="form-group">
+                <label>Hora de entrada</label>
+                <input type="time" v-model="reserva.hora_entrada" required />
+              </div>
+              <div class="form-group">
+                <label>Hora de salida</label>
+                <input type="time" v-model="reserva.hora_salida" required />
+              </div>
+            </div>
+
+            <button type="submit" class="btn-confirm">Confirmar y Pagar</button>
+          </form>
+        </div>
+
+        <div v-else class="success-message">
+          <div class="icon-check">✓</div>
+          <h2>¡Reserva Confirmada!</h2>
+          <div class="success-details">
+            <p><strong>Sala reservada:</strong> {{ espacioSeleccionado?.nombre }}</p>
+            <p>
+              <strong>Capacidad:</strong> {{ espacioSeleccionado?.capacidad }} personas
+            </p>
+            <p><strong>Fecha:</strong> {{ reserva.fecha }}</p>
+            <p>
+              <strong>Horario:</strong> {{ reserva.hora_entrada }} -
+              {{ reserva.hora_salida }}
+            </p>
+            <hr class="divider" />
+            <p class="final-price"><strong>Precio Total:</strong> {{ precioTotal }} €</p>
           </div>
 
-          <div class="form-group">
-            <label>Email Universitario</label>
-            <input
-              type="email"
-              v-model="reserva.email"
-              placeholder="@universidad.edu"
-              required
-            />
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label>Fecha</label>
-              <input type="date" v-model="reserva.fecha" required />
-            </div>
-            <div class="form-group">
-              <label>Hora de entrada</label>
-              <input type="time" v-model="reserva.hora_entrada" required />
-            </div>
-            <div class="form-group">
-              <label>Hora de salida</label>
-              <input type="time" v-model="reserva.hora_salida" required />
-            </div>
-          </div>
-
-          <button type="submit" class="btn-confirm">Confirmar y Pagar</button>
-        </form>
+          <button @click="irAlInicio" class="btn-home">Volver al Inicio</button>
+        </div>
       </div>
 
       <div class="summary-column">
@@ -71,13 +93,16 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, type Ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import type { Reserva } from "@shared/interfaces";
+import type { Reserva } from "@/shared/interfaces"; // Ajusta según tu ruta real
 import { spacesData } from "@/shared/data";
 
 const router = useRouter();
 const route = useRoute();
 
-// 1. Buscamos la sala basada en el ID de la URL
+// Estado para controlar la visibilidad del mensaje de éxito
+const confirmacionVisible = ref(false);
+
+// 1. Buscamos la sala
 const espacioSeleccionado = computed(() => {
   const idFromUrl = Number(route.query.id);
   return spacesData.find((s) => s.id === idFromUrl);
@@ -86,7 +111,7 @@ const espacioSeleccionado = computed(() => {
 // Datos del formulario
 const reserva: Ref<Reserva> = ref({} as Reserva);
 
-// Validación al cargar: Si alguien entra directo sin elegir sala, lo devolvemos
+// Validación al cargar
 onMounted(() => {
   if (!espacioSeleccionado.value) {
     alert("Por favor selecciona una sala primero.");
@@ -94,6 +119,7 @@ onMounted(() => {
   }
 });
 
+// Cálculo del precio
 const precioTotal = computed(() => {
   if (
     !espacioSeleccionado.value ||
@@ -103,7 +129,6 @@ const precioTotal = computed(() => {
     return "0.00";
   }
 
-  // [Jose] Se pone valor inicial = 0 para evitar que tenga valor undefined
   const [hInicio = 0, mInicio = 0] = reserva.value.hora_entrada.split(":").map(Number);
   const [hFin = 0, mFin = 0] = reserva.value.hora_salida.split(":").map(Number);
 
@@ -117,24 +142,32 @@ const precioTotal = computed(() => {
   const precioFinal = horasTotales * espacioSeleccionado.value.price;
 
   return precioFinal.toFixed(2);
-})
+});
 
+// Lógica al enviar el formulario
 const confirmarReserva = () => {
+  // Validación básica
+  if (Number(precioTotal.value) <= 0) {
+    alert("La hora de salida debe ser posterior a la hora de entrada.");
+    return;
+  }
+
   if (reserva.value.nombre && reserva.value.fecha && espacioSeleccionado.value) {
-    alert(
-      `¡Reserva Confirmada!\n` +
-        `Sala: ${espacioSeleccionado.value.nombre}\n` +
-        `Precio: ${espacioSeleccionado.value.price}€`
-    );
-    router.push("/");
+    // EN VEZ DE ALERT, MOSTRAMOS EL DIV DE ÉXITO
+    confirmacionVisible.value = true;
   } else {
     alert("Por favor completa todos los campos.");
   }
 };
+
+// Función para volver al inicio desde el mensaje de éxito
+const irAlInicio = () => {
+  router.push("/");
+};
 </script>
 
 <style scoped>
-/* Tus estilos se mantienen igual */
+/* Estilos existentes... */
 .page-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -194,5 +227,73 @@ const confirmarReserva = () => {
   border-radius: 8px;
   opacity: 0.8;
   object-fit: cover;
+}
+
+/* NUEVOS ESTILOS PARA EL MENSAJE DE ÉXITO */
+.success-message {
+  background-color: #f0fff4;
+  border: 1px solid #c6f6d5;
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.icon-check {
+  font-size: 3rem;
+  color: #28a745;
+  margin-bottom: 10px;
+}
+
+.success-details {
+  text-align: left;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.success-details p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 15px 0;
+}
+
+.final-price {
+  font-size: 1.3rem;
+  color: #28a745;
+  text-align: right;
+}
+
+.btn-home {
+  background-color: #28a745;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.btn-home:hover {
+  background-color: #218838;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>
