@@ -1,22 +1,26 @@
 /* =========================================
-   1. Variables Globales (Theming)
+   1. Variables Globales (Adaptadas a Warm Bookstore)
    ========================================= */
 :root {
-  /* Paleta de Colores Nexus */
-  --color-primary: #6f42c1;       /* Púrpura principal */
-  --color-primary-dark: #553098;  /* Púrpura oscuro (hover) */
-  --color-secondary: #28a745;     /* Verde (éxito/detalles) */
-  --color-accent: #a4febd;        /* Verde claro (acentos) */
+  /* Paleta de Colores "Bookstore" mapeada a variables Vue */
+  --color-primary: #8b4513;       /* Antes Púrpura -> Ahora Saddle Brown */
+  --color-primary-dark: #6f360e;  /* Hover más oscuro */
+  --color-secondary: #c17439;     /* Antes Verde -> Ahora Cobre (Accent de Angular) */
+  --color-accent: #d4a574;        /* Antes Verde claro -> Ahora Tan (Brand-2) */
+  
+  /* Variables auxiliares de la librería */
+  --color-border: #d4c4b0;        /* Soft beige borders */
+  --color-shadow: rgba(139, 69, 19, 0.1); /* Sombra cálida */
   
   /* Textos y Fondos */
-  --color-text-main: #333333;
-  --color-text-light: #666666;
-  --color-bg-body: #fdfdfd;
-  --color-bg-light: #f4f4f4;
+  --color-text-main: #2d1810;     /* Rich dark brown */
+  --color-text-light: #6b5744;    /* Muted brown */
+  --color-bg-body: #f5f1e8;       /* Warm cream */
+  --color-bg-surface: #ffffff;    /* White for inputs/cards */
 
-  /* Espaciado y Layout */
-  --container-width: 1200px;      /* Requisito estricto de la actividad */
-  --border-radius: 8px;
+  /* Espaciado y Layout (Se mantienen tus requisitos) */
+  --container-width: 1200px;      
+  --border-radius: 8px;           /* Angular usa 8px en inputs/botones */
 }
 
 /* =========================================
@@ -25,17 +29,19 @@
 *,
 *::before,
 *::after {
-  box-sizing: border-box; /* Manejo geométrico de cajas */
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-  background-color: var(--color-bg-body);
+  /* Cambio: Fuente Inter y Degradado de fondo estilo Angular */
+  font-family: 'Inter', system-ui, sans-serif; 
+  background: linear-gradient(180deg, var(--color-bg-body), #ebe4d7);
   color: var(--color-text-main);
-  line-height: 1.6; /* Mejora la legibilidad de los párrafos */
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
 }
 
 img {
@@ -45,25 +51,37 @@ img {
 }
 
 /* =========================================
-   3. Sistema de Layout (Requisito 1200px)
+   3. Sistema de Layout
    ========================================= */
-/* Clase de utilidad para centrar contenido */
 .container, .page-container {
   width: 100%;
   max-width: var(--container-width);
-  margin: 0 auto; /* Centrado horizontal */
-  padding: 0 20px; /* Margen interno para móviles */
+  margin: 0 auto;
+  padding: 16px 20px; /* Ajustado ligeramente para coincidir */
 }
 
-/* Filas y Columnas genéricas (Flexbox básico) */
 .row {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 14px; /* Ajustado a 14px como en Angular */
 }
 
 .col {
   flex: 1;
+}
+
+/* Si usas tarjetas, añadimos el estilo de Angular aquí */
+.card {
+  background: linear-gradient(135deg, #ffffff 0%, #faf8f4 100%);
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px var(--color-shadow), 0 2px 4px rgba(139, 69, 19, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 20px var(--color-shadow), 0 4px 8px rgba(139, 69, 19, 0.08);
 }
 
 /* =========================================
@@ -71,7 +89,9 @@ img {
    ========================================= */
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
-  color: var(--color-primary);
+  /* Cambio: Fuente Merriweather */
+  font-family: 'Merriweather', serif;
+  color: #1e1b1a; /* Color casi negro de los headers de Angular */
   font-weight: 700;
   line-height: 1.2;
 }
@@ -84,7 +104,8 @@ h1 {
 h2 {
   font-size: 2rem;
   margin-bottom: 0.8rem;
-  border-bottom: 2px solid var(--color-accent);
+  /* El borde inferior ahora usa el color 'tan' */
+  border-bottom: 3px solid var(--color-accent); 
   display: inline-block;
   padding-bottom: 5px;
 }
@@ -92,6 +113,16 @@ h2 {
 p {
   margin-bottom: 1rem;
   color: var(--color-text-light);
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--color-secondary);
 }
 
 /* =========================================
@@ -104,21 +135,24 @@ input[type="date"],
 input[type="time"],
 select {
   width: 100%;
-  padding: 12px;
+  padding: 10px; /* Ajustado a 10px */
   margin: 8px 0;
   display: inline-block;
-  border: 1px solid #ccc;
+  /* Estilo adaptado: Borde beige y fondo blanco */
+  border: 2px solid var(--color-border);
+  background: var(--color-bg-surface);
+  color: var(--color-text-main);
   border-radius: var(--border-radius);
   font-size: 1rem;
-  font-family: inherit;
-  transition: border-color 0.3s;
+  font-family: 'Inter', system-ui, sans-serif;
+  transition: border-color 0.2s ease;
 }
 
 input:focus,
 select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+  box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
 }
 
 /* =========================================
@@ -126,12 +160,29 @@ select:focus {
    ========================================= */
 button, 
 .btn {
-  cursor: pointer;
   border: none;
-  font-family: inherit;
-  transition: background-color 0.3s, transform 0.1s;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  /* El degradado característico de la app Angular */
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: white;
+  font-weight: 600;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(139, 69, 19, 0.2);
 }
 
-button:active {
-  transform: scale(0.98);
+button:hover,
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
+  /* Un pequeño filtro de brillo en lugar de cambio de color plano */
+  filter: brightness(1.1); 
+}
+
+button:active,
+.btn:active {
+  transform: translateY(1px);
 }

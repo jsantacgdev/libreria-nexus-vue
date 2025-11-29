@@ -7,16 +7,18 @@ const currentYear: number = new Date().getFullYear();
   <footer class="main-footer">
     <div class="footer-content">
       <div class="footer-section">
-        <h4>Nexus Universitario</h4>
+        <h4 class="brand-font">Nexus Universitario</h4>
         <p>Espacios de coworking y librería técnica para estudiantes.</p>
       </div>
 
       <div class="footer-section">
-        <p>
+        <p class="copyright">
           &copy; {{ currentYear }} Nexus Project. Todos los derechos reservados.
         </p>
         <div class="legal-links">
-          <a href="#">Aviso Legal</a> | <a href="#">Política de Privacidad</a>
+          <a href="#">Aviso Legal</a>
+          <span class="separator">|</span>
+          <a href="#">Política de Privacidad</a>
         </div>
       </div>
     </div>
@@ -25,11 +27,13 @@ const currentYear: number = new Date().getFullYear();
 
 <style scoped>
 .main-footer {
-  background-color: #343a40; /* Gris oscuro elegante */
-  color: #f8f9fa;
-  padding: 30px 0;
-  margin-top: 50px; /* Separación del contenido principal */
-  border-top: 4px solid #6f42c1; /* Línea de color corporativo */
+  background: linear-gradient(180deg, var(--color-primary), #5e2f0d);
+  color: #f5f1e8;
+  padding: 40px 0;
+  margin-top: 60px;
+
+  border-top: 5px solid var(--color-accent);
+  box-shadow: 0 -4px 20px rgba(139, 69, 19, 0.15);
 }
 
 .footer-content {
@@ -39,29 +43,49 @@ const currentYear: number = new Date().getFullYear();
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 15px;
 }
 
 h4 {
-  margin: 0 0 10px 0;
-  color: #a4febd; /* Verde lima suave para títulos oscuros */
+  margin: 0 0 12px 0;
+  font-family: "Merriweather", serif;
+  color: var(--color-accent);
+  font-size: 1.25rem;
+  letter-spacing: 0.5px;
 }
 
 p {
   margin: 5px 0;
-  font-size: 0.9rem;
-  color: #ccc;
+  font-size: 0.95rem;
+  color: rgba(255, 248, 240, 0.85);
+  font-family: "Inter", sans-serif;
+}
+
+.copyright {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.legal-links {
+  margin-top: 5px;
+}
+
+.separator {
+  color: var(--color-accent);
+  margin: 0 8px;
+  opacity: 0.5;
 }
 
 .legal-links a {
-  color: #ccc;
+  color: rgba(255, 248, 240, 0.7);
   text-decoration: none;
   font-size: 0.85rem;
-  transition: color 0.2s;
+  transition: all 0.2s ease;
+  font-weight: 500;
 }
 
 .legal-links a:hover {
-  color: white;
+  color: #ffffff;
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 </style>
