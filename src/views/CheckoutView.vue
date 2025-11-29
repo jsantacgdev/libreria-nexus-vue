@@ -25,7 +25,7 @@
             <div class="form-row">
               <div class="form-group">
                 <label>Fecha</label>
-                <input type="date" v-model="reserva.fecha" required />
+                <input type="date" v-model="reserva.fecha" :min="minFecha" required />
               </div>
               <div class="form-group">
                 <label>Hora de entrada</label>
@@ -144,30 +144,38 @@ const precioTotal = computed(() => {
   return precioFinal.toFixed(2);
 });
 
-// Lógica al enviar el formulario
+const minFecha = computed(() => {
+  const fechaActual = new Date();
+  return fechaActual.toISOString().split("T")[0]
+})
+
 const confirmarReserva = () => {
-  // Validación básica
   if (Number(precioTotal.value) <= 0) {
     alert("La hora de salida debe ser posterior a la hora de entrada.");
     return;
   }
 
+  const fechaReserva = new Date(`${reserva.value.fecha}T${reserva.value.hora_entrada}`);
+  const ahora = new Date();
+
+  if (fechaReserva < ahora) {
+    alert("No puedes reservar en una fecha u hora pasada.");
+    return;
+  }
+
   if (reserva.value.nombre && reserva.value.fecha && espacioSeleccionado.value) {
-    // EN VEZ DE ALERT, MOSTRAMOS EL DIV DE ÉXITO
     confirmacionVisible.value = true;
   } else {
     alert("Por favor completa todos los campos.");
   }
 };
 
-// Función para volver al inicio desde el mensaje de éxito
 const irAlInicio = () => {
   router.push("/");
 };
 </script>
 
 <style scoped>
-/* Estilos existentes... */
 .page-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -229,7 +237,6 @@ const irAlInicio = () => {
   object-fit: cover;
 }
 
-/* NUEVOS ESTILOS PARA EL MENSAJE DE ÉXITO */
 .success-message {
   background-color: #f0fff4;
   border: 1px solid #c6f6d5;
