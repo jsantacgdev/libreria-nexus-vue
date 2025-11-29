@@ -4,7 +4,7 @@
     <p>Selecciona el entorno ideal para tu trabajo hoy.</p>
 
     <div class="filters">
-      <div class="filter-group">
+      <div>
         <label>Planta:</label>
         <select v-model="filtroPlanta">
           <option value="todas">Todas las plantas</option>
@@ -13,23 +13,19 @@
         </select>
       </div>
 
-      <div class="filter-group">
+      <div class="filters-capacity">
         <label>Capacidad mínima:</label>
-        <input
-          type="number"
-          v-model="filtroCapacidad"
-          min="1"
-          placeholder="Ej. 4 personas"
-        />
+        <select v-model="filtroCapacidad">
+          <option value="" disabled selected>Selecciona capacidad</option>
+          <option v-for="n in 10" :key="n" :value="n">
+            {{ n }} {{ n === 1 ? "persona" : "personas" }}
+          </option>
+        </select>
       </div>
     </div>
 
     <div class="spaces-grid">
-      <div
-        v-for="espacio in espaciosFiltrados"
-        :key="espacio.id"
-        class="space-card"
-      >
+      <div v-for="espacio in espaciosFiltrados" :key="espacio.id" class="space-card">
         <img :src="espacio.img" :alt="espacio.nombre" />
         <div class="card-body">
           <h3>{{ espacio.nombre }}</h3>
@@ -37,7 +33,12 @@
             <li><strong>Planta:</strong> {{ espacio.planta }}</li>
             <li><strong>Capacidad:</strong> {{ espacio.capacidad }} pers.</li>
           </ul>
-          <router-link to="/checkout" class="btn-book">Reservar</router-link>
+          <router-link
+            :to="{ path: '/checkout', query: { id: espacio.id } }"
+            class="btn-book"
+          >
+            Reservar
+          </router-link>
         </div>
       </div>
     </div>
@@ -67,12 +68,10 @@ const filtroCapacidad = ref<number | string>(""); // Puede ser string vacío al 
 const espaciosFiltrados = computed(() => {
   return espacios.value.filter((espacio) => {
     const coincidePlanta =
-      filtroPlanta.value === "todas" ||
-      espacio.planta === Number(filtroPlanta.value);
+      filtroPlanta.value === "todas" || espacio.planta === Number(filtroPlanta.value);
     // Convertimos a number para asegurar la comparación correcta
     const coincideCapacidad =
-      !filtroCapacidad.value ||
-      espacio.capacidad >= Number(filtroCapacidad.value);
+      !filtroCapacidad.value || espacio.capacidad >= Number(filtroCapacidad.value);
     return coincidePlanta && coincideCapacidad;
   });
 });
@@ -92,6 +91,10 @@ const espaciosFiltrados = computed(() => {
   display: flex;
   gap: 20px;
   margin-bottom: 30px;
+}
+
+.filters-capacity {
+  width: 13rem;
 }
 
 .spaces-grid {
